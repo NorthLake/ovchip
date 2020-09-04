@@ -35,7 +35,7 @@ public class CRUDReiziger {
 
         // Maak een nieuwe reiziger aan en persisteer deze in de database
         String gbdatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(77, "S", null, "Boers", LocalDate.parse(gbdatum));
+        Reiziger sietske = new Reiziger(77, "S", null, "Boers", LocalDate.parse(gbdatum), null);
         System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
         rdao.save(sietske);
         reizigers = rdao.findAll();

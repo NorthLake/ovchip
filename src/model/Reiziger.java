@@ -8,13 +8,15 @@ public class Reiziger {
     private String tussenvoegsel;
     private String achternaam;
     private LocalDate geboortedatum;
+    private Adres adres;
 
-    public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, LocalDate geboortedatum) {
+    public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, LocalDate geboortedatum, Adres adres) {
         this.id = id;
         this.voorletters = voorletters;
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;
         this.geboortedatum = geboortedatum;
+        this.adres = adres;
     }
 
     @Override
@@ -24,7 +26,11 @@ public class Reiziger {
             naam = voorletters + " " + achternaam;
         else
             naam = voorletters + " " + tussenvoegsel + " " + achternaam;
-        return "Reiziger #" + id + ": " + naam + " (" + geboortedatum + ")";
+        StackTraceElement element = Thread.currentThread().getStackTrace()[2];
+        if (element.getClassName().equals("model.Adres") && element.getMethodName().equals("toString"))
+            return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + "}";
+        else
+            return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + ", " + adres + "}";
     }
 
     //region getters
@@ -64,6 +70,10 @@ public class Reiziger {
 
     public void setGeboortedatum(LocalDate geboortedatum) {
         this.geboortedatum = geboortedatum;
+    }
+
+    public void setAdres(Adres adres) {
+        this.adres = adres;
     }
     //endregion
 }

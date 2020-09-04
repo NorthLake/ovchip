@@ -48,7 +48,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
-        return new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate());
+        return new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate(), null);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         statement.setDate(1, Date.valueOf(datum));
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
-            reizigers.add(new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate()));
+            reizigers.add(new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate(), null));
         }
         return reizigers;
     }
@@ -69,7 +69,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         Statement statement = conn.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM reiziger");
         while (resultSet.next()) {
-            reizigers.add(new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate()));
+            reizigers.add(new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate(), null));
         }
         return reizigers;
     }
