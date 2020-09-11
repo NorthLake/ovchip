@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ReizigerDAO {
+    void setAdresDAO(AdresDAO adao);
     boolean save(Reiziger reiziger) throws SQLException;
     boolean update(Reiziger reiziger) throws SQLException;
     boolean delete(Reiziger reiziger) throws SQLException;

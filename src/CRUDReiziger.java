@@ -18,6 +18,7 @@ public class CRUDReiziger {
         ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
         AdresDAO adresDAO = new AdresDAOPsql(connection);
         adresDAO.setReizigerDAO(reizigerDAO);
+        reizigerDAO.setAdresDAO(adresDAO);
         testReizigerDAO(reizigerDAO);
     }
 
@@ -49,6 +50,7 @@ public class CRUDReiziger {
         rdao.save(sietske);
         reizigers = rdao.findAll();
         System.out.println(reizigers.size() + " reizigers\n");
+
         if (!adao.save(adres))
             System.out.println("Kon adres niet opslaan");
 
@@ -73,7 +75,7 @@ public class CRUDReiziger {
             System.out.println("[Test] ReizigerDAO.update(Reiziger) geeft geen true terug");
         }
         Reiziger reizigerByIdUpdated = rdao.findById(6);
-        System.out.println("[Test] ReizigerDAO.findById(6) geeft na het wijzigen de volgende reiziger:");
+        System.out.println("[Test] ReizigerDAO.findById(6) geeft na het wijzigen van tussenvoegsel/achternaam de volgende reiziger:");
         System.out.println(reizigerByIdUpdated);
         System.out.println();
 

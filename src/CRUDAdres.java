@@ -18,6 +18,7 @@ public class CRUDAdres {
         ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
         AdresDAO adresDAO = new AdresDAOPsql(connection);
         adresDAO.setReizigerDAO(reizigerDAO);
+        reizigerDAO.setAdresDAO(adresDAO);
         testAdresDAO(adresDAO);
     }
 
@@ -40,6 +41,14 @@ public class CRUDAdres {
         }
         System.out.println();
 
+        // Haal alle adressen op uit de database die als stad Utrecht hebben
+        List<Adres> adressenUtrecht = adao.findByStad("Utrecht");
+        System.out.println("[Test] AdresDAO.findByStad(\"Utrecht\") geeft de volgende adressen:");
+        for (Adres a : adressenUtrecht) {
+            System.out.println(a);
+        }
+        System.out.println();
+
         // Maak een nieuw adres aan en persisteer deze in de database
         Adres adres = new Adres(6, "1234AB", "56", "Hoofdstraat", "Utrecht");
         Reiziger reiziger = new Reiziger(6, "S", null, "Boers", LocalDate.parse("1981-03-14"));
@@ -53,14 +62,6 @@ public class CRUDAdres {
         adressen = adao.findAll();
         System.out.println(adressen.size() + " reizigers\n");
 
-        // Haal alle adressen op uit de database die als stad Utrecht hebben
-        List<Adres> adressenUtrecht = adao.findByStad("Utrecht");
-        System.out.println("[Test] AdresDAO.findByStad(\"Utrecht\") geeft de volgende adressen:");
-        for (Adres a : adressenUtrecht) {
-            System.out.println(a);
-        }
-        System.out.println();
-
         // Haal uit de database het adres met id 6 op
         adres = adao.findById(6);
         System.out.println("[Test] AdresDAO.findById(6) geeft het volgende adres:");
@@ -73,7 +74,7 @@ public class CRUDAdres {
         if (!adao.update(adres))
             System.out.println("[Test] AdresDAO.update(Adres) geeft geen true terug");
         Adres adresByIdUpdated = adao.findById(6);
-        System.out.println("[Test] AdresDAO.findById(6) geeft na het wijzigen het volgende adres:");
+        System.out.println("[Test] AdresDAO.findById(6) geeft na het wijzigen van postcode/huisnummer het volgende adres:");
         System.out.println(adresByIdUpdated);
         System.out.println();
 

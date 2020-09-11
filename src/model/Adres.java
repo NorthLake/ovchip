@@ -18,8 +18,7 @@ public class Adres {
 
     @Override
     public String toString() {
-        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        StackTraceElement element = elements[4];
+        StackTraceElement element = Thread.currentThread().getStackTrace()[3];
         if (element.getClassName().equals("model.Reiziger") && element.getMethodName().equals("toString"))
             return "Adres {#" + id + " " + postcode + "-" + huisnummer + "}";
         else
