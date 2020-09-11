@@ -13,7 +13,11 @@ public class AdresDAOPsql implements AdresDAO {
 
     public AdresDAOPsql(Connection conn) {
         this.conn = conn;
-        this.rdao = new ReizigerDAOPsql(conn);
+    }
+
+    @Override
+    public void setReizigerDAO(ReizigerDAO rdao) {
+        this.rdao = rdao;
     }
 
     @Override
@@ -52,30 +56,62 @@ public class AdresDAOPsql implements AdresDAO {
         PreparedStatement statement = conn.prepareStatement("SELECT * FROM adres WHERE adres_id = ?");
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
+        if (!resultSet.next())
+            return null;
+        Adres adres = new Adres(
+                resultSet.getInt("adres_id"),
+                resultSet.getString("postcode"),
+                resultSet.getString("huisnummer"),
+                resultSet.getString("straat"),
+                resultSet.getString("woonplaats")
+        );
+        int reizigerId = resultSet.getInt("reiziger_id");
+        if (reizigerId != 0) {
+            Reiziger reiziger = rdao.findById(reizigerId);
+            adres.setReiziger(reiziger);
+            reiziger.setAdres(adres);
+        }
+        return adres;
+    }
+
+    @Override
+    public Adres findByIdWithoutReiziger(int id) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("SELECT * FROM adres WHERE adres_id = ?");
+        statement.setInt(1, id);
+        ResultSet resultSet = statement.executeQuery();
+        if (!resultSet.next())
+            return null;
         return new Adres(
                 resultSet.getInt("adres_id"),
                 resultSet.getString("postcode"),
                 resultSet.getString("huisnummer"),
                 resultSet.getString("straat"),
-                resultSet.getString("woonplaats"),
-                rdao.findById(resultSet.getInt("reiziger_id")));
+                resultSet.getString("woonplaats")
+        );
     }
 
     @Override
-    public List<Adres> findByReiziger(Reiziger reiziger) throws SQLException {
+    public List<Adres> findByStad(String stad) throws SQLException {
         List<Adres> adressen = new ArrayList<>();
-        PreparedStatement statement = conn.prepareStatement("SELECT * FROM adres WHERE reiziger_id = ?");
-        statement.setInt(1, reiziger.getId());
+        PreparedStatement statement = conn.prepareStatement("SELECT * FROM adres WHERE woonplaats = ? ORDER BY adres_id");
+        statement.setString(1, stad);
         ResultSet resultSet = statement.executeQuery();
-        resultSet.next();
-        adressen.add(new Adres(
-                resultSet.getInt("adres_id"),
-                resultSet.getString("postcode"),
-                resultSet.getString("huisnummer"),
-                resultSet.getString("straat"),
-                resultSet.getString("woonplaats"),
-                reiziger));
+        while(resultSet.next()) {
+            Adres adres = new Adres(
+                    resultSet.getInt("adres_id"),
+                    resultSet.getString("postcode"),
+                    resultSet.getString("huisnummer"),
+                    resultSet.getString("straat"),
+                    stad
+            );
+            int reizigerId = resultSet.getInt("reiziger_id");
+            if (reizigerId != 0) {
+                Reiziger reiziger = rdao.findById(reizigerId);
+                adres.setReiziger(reiziger);
+                reiziger.setAdres(adres);
+            }
+            adressen.add(adres);
+        }
         return adressen;
     }
 
@@ -83,15 +119,22 @@ public class AdresDAOPsql implements AdresDAO {
     public List<Adres> findAll() throws SQLException {
         List<Adres> adressen = new ArrayList<>();
         Statement statement = conn.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM reiziger");
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM adres ORDER BY adres_id");
         while (resultSet.next()) {
-            adressen.add(new Adres(
+            Adres adres = new Adres(
                     resultSet.getInt("adres_id"),
                     resultSet.getString("postcode"),
                     resultSet.getString("huisnummer"),
                     resultSet.getString("straat"),
-                    resultSet.getString("woonplaats"),
-                    rdao.findById(resultSet.getInt("reiziger_id"))));
+                    resultSet.getString("woonplaats")
+            );
+            int reizigerId = resultSet.getInt("reiziger_id");
+            if (reizigerId != 0) {
+                Reiziger reiziger = rdao.findById(reizigerId);
+                adres.setReiziger(reiziger);
+                reiziger.setAdres(adres);
+            }
+            adressen.add(adres);
         }
         return adressen;
     }

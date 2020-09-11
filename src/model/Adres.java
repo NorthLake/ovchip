@@ -8,18 +8,18 @@ public class Adres {
     private String woonplaats;
     private Reiziger reiziger;
 
-    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, Reiziger reiziger) {
+    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats) {
         this.id = id;
         this.postcode = postcode;
         this.huisnummer = huisnummer;
         this.straat = straat;
         this.woonplaats = woonplaats;
-        this.reiziger = reiziger;
     }
 
     @Override
     public String toString() {
-        StackTraceElement element = Thread.currentThread().getStackTrace()[2];
+        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        StackTraceElement element = elements[4];
         if (element.getClassName().equals("model.Reiziger") && element.getMethodName().equals("toString"))
             return "Adres {#" + id + " " + postcode + "-" + huisnummer + "}";
         else

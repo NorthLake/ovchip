@@ -48,17 +48,29 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
-        return new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate(), null);
+        return new Reiziger(
+                resultSet.getInt("reiziger_id"),
+                resultSet.getString("voorletters"),
+                resultSet.getString("tussenvoegsel"),
+                resultSet.getString("achternaam"),
+                resultSet.getDate("geboortedatum").toLocalDate()
+        );
     }
 
     @Override
     public List<Reiziger> findByGbdatum(String datum) throws SQLException {
         List<Reiziger> reizigers = new ArrayList<>();
-        PreparedStatement statement = conn.prepareStatement("SELECT * FROM reiziger WHERE geboortedatum = ?");
+        PreparedStatement statement = conn.prepareStatement("SELECT * FROM reiziger WHERE geboortedatum = ? ORDER BY reiziger_id");
         statement.setDate(1, Date.valueOf(datum));
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
-            reizigers.add(new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate(), null));
+            reizigers.add(new Reiziger(
+                    resultSet.getInt("reiziger_id"),
+                    resultSet.getString("voorletters"),
+                    resultSet.getString("tussenvoegsel"),
+                    resultSet.getString("achternaam"),
+                    resultSet.getDate("geboortedatum").toLocalDate()
+            ));
         }
         return reizigers;
     }
@@ -67,9 +79,15 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     public List<Reiziger> findAll() throws SQLException {
         List<Reiziger> reizigers = new ArrayList<>();
         Statement statement = conn.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM reiziger");
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM reiziger ORDER BY reiziger_id");
         while (resultSet.next()) {
-            reizigers.add(new Reiziger(resultSet.getInt("reiziger_id"), resultSet.getString("voorletters"), resultSet.getString("tussenvoegsel"), resultSet.getString("achternaam"), resultSet.getDate("geboortedatum").toLocalDate(), null));
+            reizigers.add(new Reiziger(
+                    resultSet.getInt("reiziger_id"),
+                    resultSet.getString("voorletters"),
+                    resultSet.getString("tussenvoegsel"),
+                    resultSet.getString("achternaam"),
+                    resultSet.getDate("geboortedatum").toLocalDate()
+            ));
         }
         return reizigers;
     }
