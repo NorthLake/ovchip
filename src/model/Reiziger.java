@@ -1,6 +1,8 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Reiziger {
     private final int id;
@@ -9,6 +11,7 @@ public class Reiziger {
     private String achternaam;
     private LocalDate geboortedatum;
     private Adres adres;
+    private final Set<OVChipkaart> kaarten = new HashSet<>();
 
     public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, LocalDate geboortedatum) {
         this.id = id;
@@ -30,6 +33,14 @@ public class Reiziger {
             return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + "}";
         else
             return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + ", " + adres + "}";
+    }
+
+    public boolean addKaart(OVChipkaart ovChipkaart) {
+        return this.kaarten.add(ovChipkaart);
+    }
+
+    public boolean removeKaart(OVChipkaart ovChipkaart) {
+        return this.kaarten.remove(ovChipkaart);
     }
 
     //region getters
