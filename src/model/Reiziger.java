@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ public class Reiziger {
     private String achternaam;
     private LocalDate geboortedatum;
     private Adres adres;
-    private final Set<OVChipkaart> kaarten = new HashSet<>();
+    private Set<OVChipkaart> kaarten = new HashSet<>();
 
     public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, LocalDate geboortedatum) {
         this.id = id;
@@ -30,16 +31,18 @@ public class Reiziger {
             naam = voorletters + " " + tussenvoegsel + " " + achternaam;
         StackTraceElement element = Thread.currentThread().getStackTrace()[3];
         if ((element.getClassName().equals("model.Adres") && element.getMethodName().equals("toString")) || adres == null)
-            return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + "}";
+            return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + ", OV-chipkaarten: " + kaarten + "}";
         else
-            return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + ", " + adres + "}";
+            return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + ", " + adres + ", OV-chipkaarten: " + kaarten + "}";
     }
 
     public boolean addKaart(OVChipkaart ovChipkaart) {
+        ovChipkaart.setReiziger(this);
         return this.kaarten.add(ovChipkaart);
     }
 
     public boolean removeKaart(OVChipkaart ovChipkaart) {
+        ovChipkaart.setReiziger(null);
         return this.kaarten.remove(ovChipkaart);
     }
 
@@ -67,6 +70,11 @@ public class Reiziger {
     public Adres getAdres() {
         return adres;
     }
+
+    public Set<OVChipkaart> getKaarten() {
+        return Collections.unmodifiableSet(kaarten);
+    }
+
     //endregion
 
     //region setters

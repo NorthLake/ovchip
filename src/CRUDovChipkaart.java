@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public class CRUDovChipkaart {
     private static Connection connection;
@@ -18,6 +19,7 @@ public class CRUDovChipkaart {
         AdresDAO adao = new AdresDAOPsql(connection);
         odao.setReizigerDAO(rdao);
         rdao.setAdresDAO(adao);
+        rdao.setOVChipkaartDAO(odao);
         adao.setReizigerDAO(rdao);
         testOVChipkaartDAO(odao);
     }
@@ -33,7 +35,7 @@ public class CRUDovChipkaart {
         System.out.println("\n---------- Test OVChipkaartDAO -------------");
 
         // Haal alle reizigers op uit de database
-        List<OVChipkaart> ovChipkaarten = odao.findAll();
+        Set<OVChipkaart> ovChipkaarten = odao.findAll();
         System.out.println("[Test] OVChipkaart.findAll() geeft de volgende OV-chipkaarten:");
         for (OVChipkaart o : ovChipkaarten) {
             System.out.println(o);
@@ -55,7 +57,7 @@ public class CRUDovChipkaart {
         System.out.println(ovChipkaarten.size() + " OV-chipkaarten\n");
 
         // Haal alle OV-chipkaarten op uit de database die eigendom zijn van reiziger met id 6
-        List<OVChipkaart> ovChipkaartenByReiziger = odao.findByReiziger(reiziger);
+        Set<OVChipkaart> ovChipkaartenByReiziger = odao.findByReiziger(reiziger);
         System.out.println("[Test] OVChipkaartDAO.findByReiziger(reiziger) geeft de volgende OV-chipkaarten:");
         for (OVChipkaart o : ovChipkaartenByReiziger) {
             System.out.println(o);

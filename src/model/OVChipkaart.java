@@ -2,8 +2,10 @@ package model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class OVChipkaart {
     private int kaartNummer;
@@ -11,6 +13,7 @@ public class OVChipkaart {
     private int klasse;
     private float saldo;
     private Reiziger reiziger;
+    private Set<Product> producten = new HashSet<>();
 
     public OVChipkaart(int kaartNummer, LocalDate geldigTot, int klasse, float saldo, Reiziger reiziger) {
         this.kaartNummer = kaartNummer;
@@ -23,7 +26,19 @@ public class OVChipkaart {
     @Override
     public String toString() {
         BigDecimal saldoAfgerond = new BigDecimal(Float.toString(saldo)).setScale(2, RoundingMode.HALF_UP);
-        return "OVChipkaart {#" + kaartNummer + ", geldig tot " + geldigTot + ", reist " + klasse + ", €" + saldoAfgerond + ", eigendom van " + reiziger + "}";
+        StackTraceElement element = Thread.currentThread().getStackTrace()[6];
+        if ((element.getClassName().equals("model.Reiziger") && element.getMethodName().equals("toString")))
+            return "OVChipkaart {#" + kaartNummer + ", geldig tot " + geldigTot + ", reist " + klasse + ", €" + saldoAfgerond;
+        else
+            return "OVChipkaart {#" + kaartNummer + ", geldig tot " + geldigTot + ", reist " + klasse + ", €" + saldoAfgerond + ", eigendom van " + reiziger + "}";
+    }
+
+    public boolean addProduct(Product product) {
+        return producten.add(product);
+    }
+
+    public boolean removeProduct(Product product) {
+        return producten.remove(product);
     }
 
     //region getters
@@ -46,6 +61,11 @@ public class OVChipkaart {
     public Reiziger getReiziger() {
         return reiziger;
     }
+
+    public Set<Product> getProducten() {
+        return Collections.unmodifiableSet(producten);
+    }
+
     //endregion
 
     //region setters

@@ -1,15 +1,13 @@
 import model.Adres;
 import model.Reiziger;
-import persistence.AdresDAO;
-import persistence.AdresDAOPsql;
-import persistence.ReizigerDAO;
-import persistence.ReizigerDAOPsql;
+import persistence.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public class CRUDAdres {
     private static Connection connection;
@@ -17,8 +15,10 @@ public class CRUDAdres {
         connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ovchip", "ovchip", "ovchip");
         ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
         AdresDAO adresDAO = new AdresDAOPsql(connection);
+        OVChipkaartDAO ovChipDAO = new OVChipkaartDAOPsql(connection);
         adresDAO.setReizigerDAO(reizigerDAO);
         reizigerDAO.setAdresDAO(adresDAO);
+        reizigerDAO.setOVChipkaartDAO(ovChipDAO);
         testAdresDAO(adresDAO);
     }
 
@@ -34,7 +34,7 @@ public class CRUDAdres {
         System.out.println("\n---------- Test AdresDAO -------------");
 
         // Haal alle adressen op uit de database
-        List<Adres> adressen = adao.findAll();
+        Set<Adres> adressen = adao.findAll();
         System.out.println("[Test] AdresDAO.findAll() geeft de volgende adressen:");
         for (Adres a : adressen) {
             System.out.println(a);
@@ -42,7 +42,7 @@ public class CRUDAdres {
         System.out.println();
 
         // Haal alle adressen op uit de database die als stad Utrecht hebben
-        List<Adres> adressenUtrecht = adao.findByStad("Utrecht");
+        Set<Adres> adressenUtrecht = adao.findByStad("Utrecht");
         System.out.println("[Test] AdresDAO.findByStad(\"Utrecht\") geeft de volgende adressen:");
         for (Adres a : adressenUtrecht) {
             System.out.println(a);

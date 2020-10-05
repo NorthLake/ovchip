@@ -1,9 +1,6 @@
 import model.Adres;
 import model.Reiziger;
-import persistence.AdresDAO;
-import persistence.AdresDAOPsql;
-import persistence.ReizigerDAO;
-import persistence.ReizigerDAOPsql;
+import persistence.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,8 +14,10 @@ public class CRUDReiziger {
         connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ovchip", "ovchip", "ovchip");
         ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
         AdresDAO adresDAO = new AdresDAOPsql(connection);
+        OVChipkaartDAO ovChipDAO = new OVChipkaartDAOPsql(connection);
         adresDAO.setReizigerDAO(reizigerDAO);
         reizigerDAO.setAdresDAO(adresDAO);
+        reizigerDAO.setOVChipkaartDAO(ovChipDAO);
         testReizigerDAO(reizigerDAO);
     }
 
@@ -55,8 +54,8 @@ public class CRUDReiziger {
             System.out.println("Kon adres niet opslaan");
 
         // Haal alle reizigers op uit de database die als geboortedatum 2002-12-03 hebben
-        List<Reiziger> reizigersgb = rdao.findByGbdatum("2002-12-03");
-        System.out.println("[Test] ReizigerDAO.findByGbdatum(\"2002-12-03\") geeft de volgende reizigers:");
+        List<Reiziger> reizigersgb = rdao.findByGbdatum(LocalDate.of(2002, 12, 3));
+        System.out.println("[Test] ReizigerDAO.findByGbdatum(LocalDate.of(2002, 12, 3)) geeft de volgende reizigers:");
         for (Reiziger r : reizigersgb) {
             System.out.println(r);
         }
