@@ -115,22 +115,12 @@ public class ProductDAOPsql implements ProductDAO {
 
     @Override
     public Set<Product> findAll() throws SQLException {
-        Set<Product> producten = new HashSet<>();
-        Statement statement1 = conn.createStatement();
-        ResultSet resultSet1 = statement1.executeQuery("SELECT product_nummer, naam, beschrijving, prijs FROM product;");
+        Set<Product> producten = findAllWithoutProduct();
         Set<OVChipkaart> ovChipkaarten = odao.findAllWithoutProduct();
-        while (resultSet1.next()) {
-            Product product = new Product(
-                    resultSet1.getInt("product_nummer"),
-                    resultSet1.getString("naam"),
-                    resultSet1.getString("beschrijving"),
-                    resultSet1.getFloat("prijs")
-            );
-            producten.add(product);
-        }
         for (Product product : producten) {
-            Statement statement2 = conn.createStatement();
-            ResultSet resultSet2 = statement2.executeQuery("SELECT kaart_nummer FROM ov_chipkaart_product WHERE product_nummer = ?;");
+            PreparedStatement statement2 = conn.prepareStatement("SELECT kaart_nummer FROM ov_chipkaart_product WHERE product_nummer = ?;");
+            statement2.setInt(1, product.getProductNummer());
+            ResultSet resultSet2 = statement2.executeQuery();
             while (resultSet2.next()) {
                 int kaartNummer = resultSet2.getInt("kaart_nummer");
                 for (OVChipkaart ovChipkaart : ovChipkaarten) {

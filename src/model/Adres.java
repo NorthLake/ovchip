@@ -18,11 +18,7 @@ public class Adres {
 
     @Override
     public String toString() {
-        StackTraceElement element = Thread.currentThread().getStackTrace()[3];
-        if (element.getClassName().equals("model.Reiziger") && element.getMethodName().equals("toString"))
-            return "Adres {#" + id + " " + postcode + "-" + huisnummer + "}";
-        else
-            return "Adres {#" + id + " " + postcode + "-" + huisnummer + ", " + reiziger + "}";
+        return "Adres #" + id + " " + postcode + "-" + huisnummer;
     }
 
     //region getters

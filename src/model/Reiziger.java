@@ -24,16 +24,10 @@ public class Reiziger {
 
     @Override
     public String toString() {
-        String naam;
-        if (tussenvoegsel == null)
-            naam = voorletters + " " + achternaam;
-        else
-            naam = voorletters + " " + tussenvoegsel + " " + achternaam;
-        StackTraceElement element = Thread.currentThread().getStackTrace()[3];
-        if ((element.getClassName().equals("model.Adres") && element.getMethodName().equals("toString")) || adres == null)
-            return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + ", OV-chipkaarten: " + kaarten + "}";
-        else
-            return "Reiziger {#" + id + " " + naam + ", geb. " + geboortedatum + ", " + adres + ", OV-chipkaarten: " + kaarten + "}";
+        String naam = tussenvoegsel == null
+                ? voorletters + " " + achternaam
+                : voorletters + " " + tussenvoegsel + " " + achternaam;
+        return "Reiziger #" + id + " " + naam + ", geb. " + geboortedatum;
     }
 
     public boolean addKaart(OVChipkaart ovChipkaart) {

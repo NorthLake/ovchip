@@ -27,7 +27,7 @@ public class CRUDProduct {
         pdao.setOVChipkaartDAO(odao);
         odao.setProductDAO(pdao);
 
-        testOVChipkaartDAO(odao, pdao);
+        testProductDAO(odao, pdao);
     }
 
     /**
@@ -37,7 +37,7 @@ public class CRUDProduct {
      *
      * @throws SQLException -
      */
-    private static void testOVChipkaartDAO(OVChipkaartDAO odao, ProductDAO pdao) throws SQLException {
+    private static void testProductDAO(OVChipkaartDAO odao, ProductDAO pdao) throws SQLException {
         System.out.println("\n---------- Test ProductDAO -------------");
 
         // Haal alle OV-chipkaarten op uit de database
@@ -63,13 +63,15 @@ public class CRUDProduct {
         if (!new ReizigerDAOPsql(connection).save(reiziger) || !new AdresDAOPsql(connection).save(adres))
             System.out.println("Setup mislukt");
 
-        // Maak een nieuwe OV-chipkaart en een nieuw product aan en persisteer deze in de database
+        // Maak een nieuwe OV-chipkaart en een nieuw product aan en persisteer beide in de database
         OVChipkaart ovChipkaart = new OVChipkaart(25831, LocalDate.parse("2020-10-15"), 1, 11.50f, reiziger);
         reiziger.addKaart(ovChipkaart);
         Product product = new Product(7, "Testproduct", "Dit is een testproduct.", 5f);
-        System.out.print("[Test] Eerst " + producten.size() + " OV-chipkaarten en " + ovChipkaarten.size() + " producten, na OVChipkaartDAO.save() ");
+        System.out.print("[Test] Eerst " + producten.size() + " OV-chipkaarten en " + ovChipkaarten.size() + " producten, na OVChipkaartDAO.save() en ProductDAO.save() ");
         pdao.save(product);
+        odao.save(ovChipkaart);
         producten = pdao.findAll();
+        ovChipkaarten = odao.findAll();
         System.out.println(producten.size() + " OV-chipkaarten en " + ovChipkaarten.size() + " producten\n");
 
         // Haal alle producten op uit de database die horen bij de OV-chipkaart met nummer 25831
@@ -87,7 +89,7 @@ public class CRUDProduct {
         System.out.println();
 
         // Verander de beschrijving van het product met nummer 7 naar Beschrijving veranderd
-        product.setBeschrijving("Beschrijving veranderd");
+        product.setBeschrijving("Beschrijving veranderd.");
         if (!pdao.update(product)) {
             System.out.println("[Test] ProductDAO.update(product) geeft geen true terug");
         }
@@ -97,10 +99,12 @@ public class CRUDProduct {
         System.out.println();
 
         // Verwijder de eerder aangemaakte OV-chipkaart uit de database
-        System.out.print("[Test] Eerst " + producten.size() + " producten, na Product.delete() ");
+        System.out.print("[Test] Eerst " + producten.size() + " OV-chipkaarten en " + ovChipkaarten.size() + " producten, na OVChipkaartDAO.delete() en ProductDAO.delete() ");
         pdao.delete(product);
+        odao.delete(ovChipkaart);
         producten = pdao.findAll();
-        System.out.println(producten.size() + " producten\n");
+        ovChipkaarten = odao.findAll();
+        System.out.println(producten.size() + " OV-chipkaarten en " + ovChipkaarten.size() + " producten\n");
 
         if (!new AdresDAOPsql(connection).delete(adres) || !new ReizigerDAOPsql(connection).delete(reiziger))
             System.out.println("Cleanup mislukt");

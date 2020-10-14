@@ -1,5 +1,7 @@
 package model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +26,12 @@ public class Product {
 
     public boolean removeKaart(OVChipkaart ovChipkaart) {
         return kaarten.remove(ovChipkaart);
+    }
+
+    @Override
+    public String toString() {
+        BigDecimal prijsAfgerond = new BigDecimal(Float.toString(prijs)).setScale(2, RoundingMode.HALF_UP);
+        return "Product #" + nummer + " " + naam + ": \"" + beschrijving + "\", €" + prijsAfgerond;
     }
 
     //region getters

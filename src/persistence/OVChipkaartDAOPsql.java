@@ -121,27 +121,16 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
 
     @Override
     public Set<OVChipkaart> findAll() throws SQLException {
-        Set<OVChipkaart> ovChipkaarten = new HashSet<>();
-        Statement statement1 = conn.createStatement();
-        ResultSet resultSet1 = statement1.executeQuery("SELECT * FROM ov_chipkaart ORDER BY kaart_nummer");
+        Set<OVChipkaart> ovChipkaarten = findAllWithoutProduct();
         Set<Product> producten = pdao.findAllWithoutProduct();
-        while (resultSet1.next()) {
-            ovChipkaarten.add(new OVChipkaart(
-                    resultSet1.getInt("kaart_nummer"),
-                    resultSet1.getDate("geldig_tot").toLocalDate(),
-                    resultSet1.getInt("klasse"),
-                    resultSet1.getFloat("saldo"),
-                    rdao.findById(resultSet1.getInt("reiziger_id"))
-            ));
-        }
         for (OVChipkaart ovChipkaart : ovChipkaarten) {
             PreparedStatement statement2 = conn.prepareStatement("SELECT product_nummer FROM ov_chipkaart_product WHERE kaart_nummer = ?;");
             statement2.setInt(1, ovChipkaart.getKaartNummer());
             ResultSet resultSet2 = statement2.executeQuery();
             while (resultSet2.next()) {
-                int kaartNummer = resultSet2.getInt("product_nummer");
+                int productNummer = resultSet2.getInt("product_nummer");
                 for (Product product : producten) {
-                    if (ovChipkaart.getKaartNummer() == kaartNummer) {
+                    if (product.getProductNummer() == productNummer) {
                         product.addKaart(ovChipkaart);
                         break;
                     }

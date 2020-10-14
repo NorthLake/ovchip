@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class OVChipkaart {
-    private int kaartNummer;
+    private final int kaartNummer;
     private LocalDate geldigTot;
     private int klasse;
     private float saldo;
@@ -26,11 +26,7 @@ public class OVChipkaart {
     @Override
     public String toString() {
         BigDecimal saldoAfgerond = new BigDecimal(Float.toString(saldo)).setScale(2, RoundingMode.HALF_UP);
-        StackTraceElement element = Thread.currentThread().getStackTrace()[6];
-        if ((element.getClassName().equals("model.Reiziger") && element.getMethodName().equals("toString")))
-            return "OVChipkaart {#" + kaartNummer + ", geldig tot " + geldigTot + ", reist " + klasse + ", €" + saldoAfgerond;
-        else
-            return "OVChipkaart {#" + kaartNummer + ", geldig tot " + geldigTot + ", reist " + klasse + ", €" + saldoAfgerond + ", eigendom van " + reiziger + "}";
+        return "OVChipkaart #" + kaartNummer + ", geldig tot " + geldigTot + ", klasse " + klasse + ", €" + saldoAfgerond;
     }
 
     public boolean addProduct(Product product) {
@@ -69,10 +65,6 @@ public class OVChipkaart {
     //endregion
 
     //region setters
-    public void setKaartNummer(int kaartNummer) {
-        this.kaartNummer = kaartNummer;
-    }
-
     public void setGeldigTot(LocalDate geldigTot) {
         this.geldigTot = geldigTot;
     }
